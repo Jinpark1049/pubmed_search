@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 from typing import Dict, List, Optional, Tuple
 import ollama
 
+
 def text_generator(
     user_input: Optional[str] = None,
     keyword: str = 'cancer',
@@ -61,8 +62,7 @@ def text_generator(
         print(f"규칙 기반 term: {term}")
         return term
 
-def fetch_pubmed(term: str = 'cancer', max_results=20, api_key=None) -> Dict[str, Tuple[Optional[str], Optional[str], Optional[str], Optional[str], Optional[str], Optional[str]]]:
-    
+def fetch_pubmed(term: str = 'cancer', max_results=20, api_key='') -> Dict[str, Tuple[Optional[str], Optional[str], Optional[str], Optional[str], Optional[str], Optional[str], Optional[str], Optional[str]]]:    
     esearch_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
     elink_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi"
     efetch_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
@@ -87,7 +87,7 @@ def fetch_pubmed(term: str = 'cancer', max_results=20, api_key=None) -> Dict[str
         print(f"ESearch 실패: {e}")
         return {}
     
-    time.sleep(0.1)    
+    time.sleep(0.5)    
     
     elink_params = base_params | {
         "dbfrom": "pubmed",
@@ -96,13 +96,14 @@ def fetch_pubmed(term: str = 'cancer', max_results=20, api_key=None) -> Dict[str
         "retmode": "xml"
     }
     try:
+        time.sleep(1)
         elink_response = requests.get(elink_url, params=elink_params)
         elink_response.raise_for_status()
         elink_root = ET.fromstring(elink_response.text)
         
     except (requests.RequestException, ET.ParseError) as e:
         print(f"ELink 실패: {e}")
-        return {pmid: (None, None, None, None, None, None) for pmid in pmids}
+        return {pmid: (None, None, None, None, None, None, None, None) for pmid in pmids}
         
     pmid_pmcid_map = {pmid: None for pmid in pmids}
     
@@ -118,7 +119,7 @@ def fetch_pubmed(term: str = 'cancer', max_results=20, api_key=None) -> Dict[str
         "retmode": "xml"
     }
     
-    time.sleep(0.1)
+    time.sleep(0.5)
     
     try:
         efetch_response = requests.get(efetch_url, params=efetch_params)
@@ -126,7 +127,7 @@ def fetch_pubmed(term: str = 'cancer', max_results=20, api_key=None) -> Dict[str
         efetch_root = ET.fromstring(efetch_response.text)
     except (requests.RequestException, ET.ParseError) as e:
         print(f"EFetch 실패: {e}")
-        return {pmid: (pmid_pmcid_map[pmid], None, None, None, None, None) for pmid in pmids}
+        return {pmid: (pmid_pmcid_map[pmid], None, None, None, None, None, None, None) for pmid in pmids}
     
     # 논문 데이터 저장
     pmid_data_map = {}
@@ -204,5 +205,5 @@ if __name__ == "__main__":
     result = fetch_pubmed(term, max_results=10)
     # 결과 출력
     print(f"Total number of papers found: {len(result)}")
-    for pmid, (pmcid, doi, abstract, title, authors, pub_year) in result.items():
+    for pmid, (pmcid, doi, abstract, title, authors, pub_year, journal_title, mesh_keywords ) in result.items():
         print(f"PMID: {pmid}, Title: {title}, Authors: {authors}, Year: {pub_year}, PMCID: {pmcid if pmcid else 'Not Available'}, DOI: {doi if doi else 'Not Available'}")
