@@ -105,6 +105,8 @@ def main():
         st.session_state.results = None
     if 'lda_n_components' not in st.session_state:
         st.session_state.lda_n_components = 5  # 기본 토픽 수
+    if 'lda_vis_generated' not in st.session_state:
+        st.session_state.lda_vis_generated = False
 
     use_llm = st.checkbox("LLM 사용하여 검색", value=True)
 
@@ -137,29 +139,28 @@ def main():
         
             if num_results > 0:
                 st.success(f"총 {num_results}개의 논문을 찾았습니다!")
-                display_results(results)
             else:
                 st.warning("검색 결과가 없습니다.")
+
+    # 검색 결과 표시 (항상 유지)
+    if st.session_state.results:
+        st.subheader("검색 결과")
+        display_results(st.session_state.results)
 
     # LDA 시각화 섹션
     if st.session_state.results:
         st.subheader("LDA 시각화")
-
         n_components = st.slider("토픽 수 설정", min_value=2, max_value=10, value=st.session_state.lda_n_components, key="lda_slider")
         st.session_state.lda_n_components = n_components  # 슬라이더 값으로 세션 상태 업데이트
 
         if st.button("시각화 생성"):
             with st.spinner("LDA 시각화를 생성 중입니다..."):
-                lda_vis(st.session_state.results, n_components=st.session_state.lda_n_components)
+                st.session_state.lda_vis_generated = True
 
-        # 시각화가 이미 생성된 경우, 토픽 수 변경 시 자동 갱신
-        if 'lda_vis_generated' not in st.session_state:
-            st.session_state.lda_vis_generated = False
-        
-        if st.session_state.lda_vis_generated or st.session_state.results:
+        # 시각화 표시 (검색 결과 아래에)
+        if st.session_state.lda_vis_generated:
             with st.spinner("LDA 시각화 업데이트 중..."):
                 lda_vis(st.session_state.results, n_components=st.session_state.lda_n_components)
-                st.session_state.lda_vis_generated = True
 
 if __name__ == "__main__":
     main()
