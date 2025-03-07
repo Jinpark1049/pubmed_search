@@ -3,3 +3,4 @@ requests
 pandas
 nltk
 ollama
+scikit-learn
