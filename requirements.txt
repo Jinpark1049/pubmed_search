@@ -4,3 +4,4 @@ pandas
 nltk
 ollama
 scikit-learn
+pyLDAvis
