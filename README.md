@@ -13,3 +13,6 @@ esummary:	논문 제목, 저널, 발행 연도, 논문 유형, DOI	title, source
 
 # pubmed paper search llm 
 <img width="776" alt="스크린샷 2025-03-07 오후 3 22 35" src="https://github.com/user-attachments/assets/8fa41774-91e4-4e63-aecb-1534ab78088d" />
+
+# LDA visualization
+<img width="743" alt="스크린샷 2025-03-07 오후 5 02 21" src="https://github.com/user-attachments/assets/3d5542bf-fb4d-45b2-890c-6b9c6d754607" />
