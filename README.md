@@ -1,6 +1,6 @@
 # pubmed_search
 
-Deployment: [Deployment](https://pubmedsearch-9nbubmurcnekcfnatgnv6i.streamlit.app/))
+Deployment: ([Deployment](https://pubmedsearch-9nbubmurcnekcfnatgnv6i.streamlit.app/))
 
 - llm 사용 불가
  
