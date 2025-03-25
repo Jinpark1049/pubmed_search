@@ -1,8 +1,7 @@
 # pubmed_search
 
-Deployment: ([Deployment](https://pubmedsearch-9nbubmurcnekcfnatgnv6i.streamlit.app/))
+Deployment: ([App link](https://pubmedsearch-9nbubmurcnekcfnatgnv6i.streamlit.app/))
 
-- llm 사용 불가
  
 API	가져올 수 있는 데이터	주요 필드
 
